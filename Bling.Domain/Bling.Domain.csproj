@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Bling.Domain</RootNamespace>
+    <AssemblyName>Bling.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <!-- ZERO PackageReference — Clean Architecture: Domain has no external dependencies -->
+
+</Project>

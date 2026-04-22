@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Executivo de Vendas — Janeiro 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0B0E11;
+    --surface: #13171C;
+    --surface2: #1A1F26;
+    --border: #242A33;
+    --text: #E8ECF1;
+    --text-muted: #8B95A5;
+    --accent: #3B82F6;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --green: #22C55E;
+    --green-glow: rgba(34, 197, 94, 0.12);
+    --amber: #F59E0B;
+    --amber-glow: rgba(245, 158, 11, 0.12);
+    --purple: #A855F7;
+    --purple-glow: rgba(168, 85, 247, 0.12);
+    --rose: #F43F5E;
+    --rose-glow: rgba(244, 63, 94, 0.12);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .noise {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; padding: 48px 24px 80px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center; margin-bottom: 56px;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 6px 16px 6px 12px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+  .badge .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+  .header h1 {
+    font-size: clamp(32px, 5vw, 52px); font-weight: 700;
+    letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--accent); }
+  .header p {
+    color: var(--text-muted); font-size: 16px; font-weight: 300;
+  }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px; margin-bottom: 40px;
+  }
+  .kpi-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .kpi-card .glow {
+    position: absolute; top: -40px; right: -40px;
+    width: 120px; height: 120px; border-radius: 50%;
+    pointer-events: none;
+  }
+  .kpi-card:nth-child(1) .glow { background: var(--accent-glow); }
+  .kpi-card:nth-child(2) .glow { background: var(--green-glow); }
+  .kpi-card:nth-child(3) .glow { background: var(--amber-glow); }
+  .kpi-card:nth-child(4) .glow { background: var(--purple-glow); }
+
+  .kpi-card .label {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .kpi-card .value {
+    font-size: 34px; font-weight: 700; letter-spacing: -1px; line-height: 1;
+  }
+  .kpi-card:nth-child(1) .value { color: var(--accent); }
+  .kpi-card:nth-child(2) .value { color: var(--green); }
+  .kpi-card:nth-child(3) .value { color: var(--amber); }
+  .kpi-card:nth-child(4) .value { color: var(--purple); }
+  .kpi-card .sub {
+    font-size: 13px; color: var(--text-muted); margin-top: 8px;
+  }
+
+  /* SECTION */
+  .section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-size: 18px; font-weight: 600; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+    font-size: 16px;
+  }
+  .section-subtitle {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 28px;
+  }
+
+  /* CHART */
+  .chart-container {
+    width: 100%; overflow-x: auto; padding-bottom: 8px;
+  }
+  .chart-container svg { display: block; }
+
+  .bar { transition: opacity 0.2s; cursor: default; }
+  .bar:hover { opacity: 0.85; }
+
+  .chart-grid-line { stroke: var(--border); stroke-width: 1; }
+  .chart-label {
+    fill: var(--text-muted); font-size: 10px;
+    font-family: 'Space Mono', monospace;
+  }
+  .chart-value-label {
+    fill: var(--text); font-size: 9px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+  }
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--text-muted);
+    padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th:last-child, thead th:nth-child(3), thead th:nth-child(4) { text-align: right; }
+  tbody td {
+    padding: 14px 16px; border-bottom: 1px solid rgba(36,42,51,0.5);
+    vertical-align: middle;
+  }
+  tbody td:last-child, tbody td:nth-child(3), tbody td:nth-child(4) { text-align: right; font-family: 'Space Mono', monospace; font-size: 13px; }
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+
+  .rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 8px;
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    background: var(--surface2); color: var(--text-muted);
+  }
+  .rank.top3 { background: var(--accent-glow); color: var(--accent); }
+
+  .product-name {
+    max-width: 380px; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; display: block;
+  }
+  .product-code {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--text-muted); margin-top: 2px;
+  }
+
+  .bar-bg {
+    width: 100%; height: 6px; background: var(--surface2);
+    border-radius: 3px; overflow: hidden; margin-top: 6px;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), #60A5FA);
+  }
+
+  /* SITUAÇÃO GRID */
+  .sit-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin-top: 8px;
+  }
+  .sit-item {
+    background: var(--surface2); border-radius: 10px; padding: 16px;
+  }
+  .sit-item .sit-name {
+    font-size: 12px; color: var(--text-muted); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sit-item .sit-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .sit-item .sit-val {
+    font-size: 20px; font-weight: 600; letter-spacing: -0.5px;
+  }
+  .sit-item .sit-sub {
+    font-size: 11px; color: var(--text-muted); margin-top: 2px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center; padding: 40px 0 0;
+    color: var(--text-muted); font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  /* TOOLTIP */
+  .tooltip-layer { position: relative; }
+  .chart-tooltip {
+    position: absolute; pointer-events: none;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px;
+    font-size: 12px; white-space: nowrap;
+    opacity: 0; transition: opacity 0.15s;
+    z-index: 10; transform: translate(-50%, -110%);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .chart-tooltip.visible { opacity: 1; }
+  .chart-tooltip .tt-date { font-weight: 600; margin-bottom: 2px; }
+  .chart-tooltip .tt-row { color: var(--text-muted); font-family: 'Space Mono', monospace; font-size: 11px; }
+
+  @media (max-width: 640px) {
+    .container { padding: 24px 12px 48px; }
+    .section { padding: 20px 16px; }
+    .kpi-card .value { font-size: 26px; }
+    .header h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge"><span class="dot"></span> Dados Bling ERP</div>
+    <h1>Vendas <span>Janeiro 2026</span></h1>
+    <p>Relatório executivo · 01/01/2026 a 31/01/2026 · Excluindo cancelados</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="glow"></div>
+      <div class="label">Faturamento Total</div>
+      <div class="value">R$ 217.368</div>
+      <div class="sub">Excluídos 496 pedidos cancelados (R$ 22.306,54)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="glow"></div>
+      <div class="label">Total de Pedidos</div>
+      <div class="value">4.718</div>
+      <div class="sub">Média de 152 pedidos/dia</div>
+    </div>
+    <div class="kpi-card">
+      <div class="glow"></div>
+      <div class="label">Ticket Médio</div>
+      <div class="value">R$ 46,07</div>
+      <div class="sub">Faturamento ÷ Pedidos válidos</div>
+    </div>
+    <div class="kpi-card">
+      <div class="glow"></div>
+      <div class="label">Valor Bruto Produtos</div>
+      <div class="value">R$ 320.254</div>
+      <div class="sub">Antes de descontos e frete</div>
+    </div>
+  </div>
+
+  <!-- SITUAÇÕES -->
+  <div class="section">
+    <div class="section-title">📊 Distribuição por Situação</div>
+    <div class="section-subtitle">Todos os pedidos de janeiro, incluindo cancelados</div>
+    <div class="sit-grid">
+      <div class="sit-item">
+        <div class="sit-name"><span class="sit-dot" style="background:#3FB57A"></span> Atendido</div>
+        <div class="sit-val" style="color:#3FB57A">4.687</div>
+        <div class="sit-sub">R$ 215.725,40</div>
+      </div>
+      <div class="sit-item">
+        <div class="sit-name"><span class="sit-dot" style="background:#CBCBCB"></span> Cancelado</div>
+        <div class="sit-val" style="color:#CBCBCB">496</div>
+        <div class="sit-sub">R$ 22.306,54</div>
+      </div>
+      <div class="sit-item">
+        <div class="sit-name"><span class="sit-dot" style="background:#85F39E"></span> Verificado</div>
+        <div class="sit-val" style="color:#85F39E">24</div>
+        <div class="sit-sub">R$ 1.358,90</div>
+      </div>
+      <div class="sit-item">
+        <div class="sit-name"><span class="sit-dot" style="background:#FF66E3"></span> Em digitação</div>
+        <div class="sit-val" style="color:#FF66E3">7</div>
+        <div class="sit-sub">R$ 284,16</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY CHART -->
+  <div class="section">
+    <div class="section-title">📈 Evolução Diária de Vendas</div>
+    <div class="section-subtitle">Faturamento e quantidade de pedidos por dia em janeiro/2026 (todos os status)</div>
+    <div class="chart-container tooltip-layer">
+      <div class="chart-tooltip" id="tooltip">
+        <div class="tt-date" id="tt-date"></div>
+        <div class="tt-row" id="tt-val"></div>
+        <div class="tt-row" id="tt-qty"></div>
+      </div>
+      <svg id="dailyChart" viewBox="0 0 1140 360" xmlns="http://www.w3.org/2000/svg" style="min-width:800px; width:100%;">
+      </svg>
+    </div>
+  </div>
+
+  <!-- TOP 10 PRODUCTS -->
+  <div class="section">
+    <div class="section-title">🏆 Top 10 Produtos Mais Vendidos</div>
+    <div class="section-subtitle">Ranking por quantidade vendida em janeiro/2026 — todos os status incluídos</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44px">#</th>
+            <th>Produto</th>
+            <th>Qtd. Vendida</th>
+            <th>Faturamento</th>
+          </tr>
+        </thead>
+        <tbody id="topProducts"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    Gerado automaticamente via Claude + Bling MCP · Dados extraídos em 20/03/2026
+  </div>
+</div>
+
+<script>
+// DATA
+const daily = [
+  {d:"2026-01-01",v:3308.56,q:105},{d:"2026-01-02",v:4483.12,q:127},{d:"2026-01-03",v:4901.82,q:155},
+  {d:"2026-01-04",v:4847.29,q:136},{d:"2026-01-05",v:3457.32,q:112},{d:"2026-01-06",v:4530.22,q:131},
+  {d:"2026-01-07",v:6461.76,q:155},{d:"2026-01-08",v:4140.16,q:106},{d:"2026-01-09",v:7312.77,q:154},
+  {d:"2026-01-10",v:7684.13,q:154},{d:"2026-01-11",v:8786.83,q:171},{d:"2026-01-12",v:7541.11,q:164},
+  {d:"2026-01-13",v:31034.48,q:742},{d:"2026-01-14",v:15012.06,q:373},{d:"2026-01-15",v:10338.02,q:218},
+  {d:"2026-01-16",v:7153.47,q:143},{d:"2026-01-17",v:6662.08,q:133},{d:"2026-01-18",v:5872.03,q:126},
+  {d:"2026-01-19",v:9868.51,q:186},{d:"2026-01-20",v:8213.62,q:149},{d:"2026-01-21",v:12144.27,q:211},
+  {d:"2026-01-22",v:8004.22,q:157},{d:"2026-01-23",v:7344.81,q:132},{d:"2026-01-24",v:6029.26,q:118},
+  {d:"2026-01-25",v:6629.71,q:125},{d:"2026-01-26",v:5587.04,q:108},{d:"2026-01-27",v:11676.80,q:202},
+  {d:"2026-01-28",v:7557.15,q:151},{d:"2026-01-29",v:4722.53,q:88},{d:"2026-01-30",v:4754.28,q:102},
+  {d:"2026-01-31",v:3615.57,q:80}
+];
+
+const products = [
+  {code:"C1",name:"P1",qty:650,val:52000,orders:609},
+  {code:"C2",name:"P2",qty:491,val:34370,orders:464},
+  {code:"C3",name:"P3",qty:175,val:26250,orders:152},
+  {code:"C4",name:"P4",qty:372,val:22320,orders:361},
+  {code:"C5",name:"P5",qty:216,val:21600,orders:164},
+  {code:"C6",name:"P6",qty:377,val:19344.9,orders:323},
+  {code:"C7",name:"P7",qty:125,val:17500,orders:120},
+  {code:"C8",name:"P8",qty:300,val:12000,orders:296},
+  {code:"C9",name:"P9",qty:491,val:9820,orders:485},
+  {code:"C10",name:"P10",qty:88,val:8800,orders:64}
+];
+
+// Sort products by qty desc
+products.sort((a,b) => b.qty - a.qty);
+
+const maxQty = products[0].qty;
+const fmt = n => n.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmtInt = n => n.toLocaleString('pt-BR');
+
+// ===== DAILY CHART =====
+const svg = document.getElementById('dailyChart');
+const padL = 70, padR = 20, padT = 20, padB = 40;
+const cW = 1140 - padL - padR;
+const cH = 360 - padT - padB;
+const maxV = Math.ceil(Math.max(...daily.map(d=>d.v)) / 5000) * 5000;
+const barW = Math.floor(cW / daily.length) - 4;
+
+// Grid lines
+const gridSteps = 5;
+for (let i = 0; i <= gridSteps; i++) {
+  const y = padT + cH - (cH * i / gridSteps);
+  const val = (maxV * i / gridSteps);
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', padL); line.setAttribute('x2', 1140 - padR);
+  line.setAttribute('y1', y); line.setAttribute('y2', y);
+  line.setAttribute('class','chart-grid-line');
+  if (i === 0) line.setAttribute('stroke-width','1');
+  else { line.setAttribute('stroke-dasharray','4,4'); line.setAttribute('opacity','0.4'); }
+  svg.appendChild(line);
+
+  const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+  label.setAttribute('x', padL - 8); label.setAttribute('y', y + 3);
+  label.setAttribute('text-anchor','end'); label.setAttribute('class','chart-label');
+  label.textContent = val >= 1000 ? (val/1000).toFixed(0)+'k' : val;
+  svg.appendChild(label);
+}
+
+// Bars
+const tooltip = document.getElementById('tooltip');
+const ttDate = document.getElementById('tt-date');
+const ttVal = document.getElementById('tt-val');
+const ttQty = document.getElementById('tt-qty');
+
+daily.forEach((d, i) => {
+  const x = padL + i * (cW / daily.length) + 2;
+  const h = (d.v / maxV) * cH;
+  const y = padT + cH - h;
+
+  // Gradient bar
+  const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', barW); rect.setAttribute('height', h);
+  rect.setAttribute('rx', 3); rect.setAttribute('class','bar');
+  rect.setAttribute('fill', d.v > 15000 ? '#F59E0B' : '#3B82F6');
+  rect.setAttribute('data-idx', i);
+  svg.appendChild(rect);
+
+  // Day label
+  const day = d.d.split('-')[2];
+  const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+  lbl.setAttribute('x', x + barW/2); lbl.setAttribute('y', padT + cH + 20);
+  lbl.setAttribute('text-anchor','middle'); lbl.setAttribute('class','chart-label');
+  lbl.textContent = day;
+  svg.appendChild(lbl);
+
+  // Invisible hover area
+  const hover = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  hover.setAttribute('x', padL + i * (cW / daily.length));
+  hover.setAttribute('y', padT);
+  hover.setAttribute('width', cW / daily.length);
+  hover.setAttribute('height', cH);
+  hover.setAttribute('fill','transparent');
+  hover.style.cursor = 'crosshair';
+  hover.addEventListener('mouseenter', () => {
+    const dayStr = d.d.split('-').reverse().join('/');
+    ttDate.textContent = dayStr;
+    ttVal.textContent = 'Faturamento: R$ ' + fmt(d.v);
+    ttQty.textContent = 'Pedidos: ' + d.q;
+    tooltip.classList.add('visible');
+  });
+  hover.addEventListener('mousemove', (e) => {
+    const container = e.currentTarget.closest('.tooltip-layer');
+    const rect2 = container.getBoundingClientRect();
+    tooltip.style.left = (e.clientX - rect2.left) + 'px';
+    tooltip.style.top = (e.clientY - rect2.top - 10) + 'px';
+  });
+  hover.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('visible');
+  });
+  svg.appendChild(hover);
+});
+
+// Y axis label
+const yLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+yLabel.setAttribute('x', 14); yLabel.setAttribute('y', padT + cH/2);
+yLabel.setAttribute('text-anchor','middle'); yLabel.setAttribute('class','chart-label');
+yLabel.setAttribute('transform', `rotate(-90, 14, ${padT + cH/2})`);
+yLabel.textContent = 'Faturamento (R$)';
+svg.appendChild(yLabel);
+
+// Peak annotation
+const peakIdx = daily.reduce((pi, d, i) => d.v > daily[pi].v ? i : pi, 0);
+const peakX = padL + peakIdx * (cW / daily.length) + 2 + barW/2;
+const peakY = padT + cH - (daily[peakIdx].v / maxV) * cH - 8;
+const ann = document.createElementNS('http://www.w3.org/2000/svg','text');
+ann.setAttribute('x', peakX); ann.setAttribute('y', peakY);
+ann.setAttribute('text-anchor','middle');
+ann.setAttribute('fill','#F59E0B');
+ann.setAttribute('font-size','11');
+ann.setAttribute('font-family','Space Mono, monospace');
+ann.setAttribute('font-weight','700');
+ann.textContent = '▲ R$ 31k (pico)';
+svg.appendChild(ann);
+
+// ===== TOP PRODUCTS TABLE =====
+const tbody = document.getElementById('topProducts');
+products.forEach((p, i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><span class="rank ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
+    <td>
+      <span class="product-name" title="${p.name}">${p.name}</span>
+      <div class="product-code">${p.code}</div>
+    </td>
+    <td>${fmtInt(p.qty)} un</td>
+    <td>R$ ${fmt(p.val)}</td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>

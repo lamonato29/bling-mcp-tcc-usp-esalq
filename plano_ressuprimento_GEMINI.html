@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Ressuprimento Estratégico | Jan 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --surface-color: #1a1d24;
+            --surface-color-light: #242830;
+            --primary-color: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --danger-color: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.4);
+            --warning-color: #f59e0b;
+            --warning-glow: rgba(245, 158, 11, 0.4);
+            --success-color: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(26, 29, 36, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title small {
+            display: block;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stats-badge {
+            background: var(--surface-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-badge i {
+            color: var(--primary-color);
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .risk-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .risk-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot-high { background-color: var(--danger-color); box-shadow: 0 0 10px var(--danger-glow); }
+        .dot-mid { background-color: var(--warning-color); box-shadow: 0 0 10px var(--warning-glow); }
+        .dot-low { background-color: var(--success-color); }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            vertical-align: middle;
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        tbody tr {
+            transition: transform 0.2s ease;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--surface-color-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .product-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+            max-width: 350px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-sku {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+        .numeric {
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        .val-stock {
+            color: var(--text-main);
+        }
+
+        .val-zero {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+
+        .val-proj {
+            color: var(--primary-color);
+        }
+
+        .badge-buy {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-buy.buy-high {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.5);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+            animation: pulse-border 2s infinite;
+        }
+
+        .badge-buy.buy-none {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .risk-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.3rem 0.75rem;
+            border-radius: 99px;
+        }
+
+        .risk-status.high {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+        }
+
+        .risk-status.low {
+            background: rgba(16, 185, 129, 0.1);
+            color: #6ee7b7;
+        }
+
+        tr.row-critical {
+            position: relative;
+        }
+        
+        tr.row-critical td:first-child::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--danger-color);
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        @media (max-width: 1024px) {
+            .product-name { max-width: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-title">
+            <small><i class="fas fa-chart-line"></i> Analytics & Supply Chain</small>
+            <h1>Plano de Ressuprimento</h1>
+        </div>
+        <div class="system-status">
+            <div class="stats-badge">
+                <i class="fas fa-calendar-alt"></i> Base: Janeiro 2026 (31 dias)
+            </div>
+            <div class="stats-badge">
+                <i class="fas fa-forward"></i> Projeção: Próximos 60 dias
+            </div>
+        </div>
+    </header>
+
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-boxes"></i> Top 10 Produtos - Análise de Demanda</h2>
+            <div class="risk-legend">
+                <div class="risk-legend-item">
+                    <div class="risk-dot dot-high"></div> Ruptura Iminente (Crítico)
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Estoque Atual</th>
+                        <th>Vendas (Mês)</th>
+                        <th>Projeção (60d)</th>
+                        <th>Sugestão de Compra</th>
+                        <th>Status do Risco</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Item 1 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-book"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P1">P1</span>
+                                    <span class="product-sku">C1</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-stock">37</span></td>
+                        <td class="numeric">650</td>
+                        <td class="numeric val-proj">1.258</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +1.221 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura < 2 dias</span></td>
+                    </tr>
+
+                    <!-- Item 2 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-book-open"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P2">P2</span>
+                                    <span class="product-sku">C2</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">491</td>
+                        <td class="numeric val-proj">950</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +950 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                    <!-- Item 3 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-layer-group"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P3">P3</span>
+                                    <span class="product-sku">C3</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">175</td>
+                        <td class="numeric val-proj">339</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +339 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                    <!-- Item 4 -->
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i class="fas fa-shopping-bag"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P4">P4</span>
+                                    <span class="product-sku">C4</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-stock">602</span></td>
+                        <td class="numeric">372</td>
+                        <td class="numeric val-proj">720</td>
+                        <td><div class="badge-buy"><i class="fas fa-cart-plus"></i> +118 un</div></td>
+                        <td><span class="risk-status low"><i class="fas fa-check-circle"></i> Reposição Programada</span></td>
+                    </tr>
+
+                    <!-- Item 5 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-layer-group"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P5">P5</span>
+                                    <span class="product-sku">C5</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">216</td>
+                        <td class="numeric val-proj">418</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +418 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                    <!-- Item 6 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-book"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P6">P6</span>
+                                    <span class="product-sku">C6</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">377</td>
+                        <td class="numeric val-proj">730</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +730 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                    <!-- Item 7 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-layer-group"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P7">P7</span>
+                                    <span class="product-sku">C7</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">125</td>
+                        <td class="numeric val-proj">242</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +242 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                    <!-- Item 8 -->
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i class="fas fa-cube"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P8">P8</span>
+                                    <span class="product-sku">C8</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-stock">602</span></td>
+                        <td class="numeric">300</td>
+                        <td class="numeric val-proj">581</td>
+                        <td><div class="badge-buy buy-none"><i class="fas fa-check"></i> 0 un (Estoque Ok)</div></td>
+                        <td><span class="risk-status low"><i class="fas fa-check-circle"></i> Estoque Saudável</span></td>
+                    </tr>
+
+                    <!-- Item 9 -->
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i class="fas fa-cube"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P9">P9</span>
+                                    <span class="product-sku">C9</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-stock">938</span></td>
+                        <td class="numeric">491</td>
+                        <td class="numeric val-proj">950</td>
+                        <td><div class="badge-buy"><i class="fas fa-cart-plus"></i> +12 un</div></td>
+                        <td><span class="risk-status low"><i class="fas fa-check-circle"></i> Reposição Leve</span></td>
+                    </tr>
+
+                    <!-- Item 10 -->
+                    <tr class="row-critical">
+                        <td>
+                            <div class="product-info">
+                                <div class="product-icon"><i class="fas fa-layer-group"></i></div>
+                                <div class="product-details">
+                                    <span class="product-name" title="P10">P10</span>
+                                    <span class="product-sku">C10</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="numeric"><span class="val-zero">0</span></td>
+                        <td class="numeric">88</td>
+                        <td class="numeric val-proj">170</td>
+                        <td><div class="badge-buy buy-high"><i class="fas fa-cart-plus"></i> +170 un</div></td>
+                        <td><span class="risk-status high"><i class="fas fa-exclamation-triangle"></i> Ruptura Imediata</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add subtle reveal animations using IntersectionObserver if desired
+    // For now, rows are animated with CSS and the container as well.
+</script>
+</body>
+</html>

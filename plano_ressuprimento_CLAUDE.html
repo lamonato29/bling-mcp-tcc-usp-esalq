@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Ressuprimento — Janeiro 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e12;
+    --surface: #14171e;
+    --surface-2: #1a1e28;
+    --border: #252a36;
+    --text: #e8eaf0;
+    --text-muted: #7c829a;
+    --accent: #6c8cff;
+    --accent-glow: rgba(108, 140, 255, 0.15);
+    --danger: #ff4d6a;
+    --danger-bg: rgba(255, 77, 106, 0.08);
+    --danger-border: rgba(255, 77, 106, 0.25);
+    --danger-glow: rgba(255, 77, 106, 0.12);
+    --warning: #ffb347;
+    --warning-bg: rgba(255, 179, 71, 0.08);
+    --warning-border: rgba(255, 179, 71, 0.25);
+    --ok: #34d399;
+    --ok-bg: rgba(52, 211, 153, 0.08);
+    --ok-border: rgba(52, 211, 153, 0.25);
+    --radius: 12px;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* === HEADER === */
+  .header {
+    background: linear-gradient(135deg, #0f1219 0%, #161b27 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(108,140,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .header h1 span { color: var(--accent); }
+  .header-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .header-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* === KPI CARDS === */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 28px 48px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi:hover { border-color: var(--accent); }
+  .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .kpi-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+  .kpi.danger { border-left: 3px solid var(--danger); }
+  .kpi.danger .kpi-value { color: var(--danger); }
+  .kpi.warning { border-left: 3px solid var(--warning); }
+  .kpi.warning .kpi-value { color: var(--warning); }
+  .kpi.ok { border-left: 3px solid var(--ok); }
+  .kpi.ok .kpi-value { color: var(--ok); }
+
+  /* === CONTENT === */
+  .content { padding: 0 48px 60px; }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 36px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .icon {
+    width: 28px; height: 28px;
+    background: var(--accent-glow);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    max-width: 720px;
+  }
+
+  /* === TABLE === */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .table-wrap thead th {
+    background: var(--surface-2);
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .table-wrap thead th.right { text-align: right; }
+  .table-wrap thead th.center { text-align: center; }
+
+  .table-wrap tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .table-wrap tbody tr:last-child td { border-bottom: none; }
+  .table-wrap tbody tr {
+    transition: background 0.15s;
+  }
+  .table-wrap tbody tr:hover { background: rgba(108,140,255,0.03); }
+
+  .table-wrap tbody tr.row-danger {
+    background: var(--danger-bg);
+  }
+  .table-wrap tbody tr.row-danger:hover {
+    background: rgba(255,77,106,0.12);
+  }
+  .table-wrap tbody tr.row-warning {
+    background: var(--warning-bg);
+  }
+
+  td.right { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+  td.center { text-align: center; }
+
+  .product-name {
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+  }
+  .product-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* === STATUS BADGES === */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .status .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status.ruptura {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
+  }
+  .status.ruptura .pulse {
+    background: var(--danger);
+    animation: pulse-danger 1.5s ease-in-out infinite;
+  }
+  .status.atencao {
+    background: var(--warning-bg);
+    color: var(--warning);
+    border: 1px solid var(--warning-border);
+  }
+  .status.atencao .pulse { background: var(--warning); }
+  .status.ok-badge {
+    background: var(--ok-bg);
+    color: var(--ok);
+    border: 1px solid var(--ok-border);
+  }
+  .status.ok-badge .pulse { background: var(--ok); }
+
+  @keyframes pulse-danger {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,77,106,0.4); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(255,77,106,0); }
+  }
+
+  /* === COVERAGE BAR === */
+  .coverage-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .coverage-bar {
+    width: 80px; height: 6px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .coverage-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .coverage-bar-fill.danger { background: var(--danger); }
+  .coverage-bar-fill.warning { background: var(--warning); }
+  .coverage-bar-fill.ok { background: var(--ok); }
+  .coverage-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    white-space: nowrap;
+    min-width: 48px;
+  }
+
+  /* === METHODOLOGY === */
+  .methodology {
+    margin-top: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+  }
+  .methodology h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .methodology p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .methodology code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface-2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* === FOOTER === */
+  .footer {
+    padding: 20px 48px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* === LEGEND === */
+  .legend {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 900px) {
+    .header, .kpi-row, .content, .footer { padding-left: 20px; padding-right: 20px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .table-wrap { overflow-x: auto; }
+    .table-wrap table { min-width: 900px; }
+  }
+
+  /* === PRINT === */
+  @media print {
+    body { background: #fff; color: #111; }
+    .header { background: #fff; border-bottom: 2px solid #111; }
+    .kpi, .table-wrap, .methodology { border: 1px solid #ccc; background: #fff; }
+    .table-wrap thead th { background: #f5f5f5; color: #333; }
+    .status.ruptura { color: #c0392b; border-color: #c0392b; }
+    .status.atencao { color: #e67e22; border-color: #e67e22; }
+    .status.ok-badge { color: #27ae60; border-color: #27ae60; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Plano de <span>Ressuprimento</span></h1>
+      <div class="header-sub">Análise baseada nas vendas de Janeiro/2026 &mdash; Projeção para 60 dias (Fev–Mar 2026)</div>
+    </div>
+    <div class="header-badge">
+      <span class="dot"></span>
+      Dados atualizados via Bling API &middot; 20/03/2026
+    </div>
+  </div>
+</div>
+
+<!-- ===== KPI CARDS ===== -->
+<div class="kpi-row">
+  <div class="kpi danger">
+    <div class="kpi-label">Itens em Ruptura</div>
+    <div class="kpi-value">7 de 10</div>
+    <div class="kpi-note">Estoque zerado ou &lt; 3 dias</div>
+  </div>
+  <div class="kpi warning">
+    <div class="kpi-label">Itens em Atenção</div>
+    <div class="kpi-value">2</div>
+    <div class="kpi-note">Cobertura entre 30–60 dias</div>
+  </div>
+  <div class="kpi ok">
+    <div class="kpi-label">Itens OK</div>
+    <div class="kpi-value">1</div>
+    <div class="kpi-note">Cobertura &ge; 60 dias</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Total Vendido em Jan/26</div>
+    <div class="kpi-value">R$ 217.368</div>
+    <div class="kpi-note">5.214 pedidos analisados &middot; Top 10 SKUs</div>
+  </div>
+</div>
+
+<!-- ===== MAIN TABLE ===== -->
+<div class="content">
+  <div class="section-title">
+    <span class="icon">📋</span>
+    Tabela de Ressuprimento
+  </div>
+  <div class="section-desc">
+    Ranking por faturamento dos 10 SKUs mais vendidos em janeiro de 2026, com estoque atual, projeção de demanda para 60 dias e sugestão de compra.
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div> Ruptura — Estoque zerado ou &lt; 3 dias</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--warning)"></div> Atenção — Cobertura &lt; 60 dias</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--ok)"></div> OK — Cobertura &ge; 60 dias</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th>Produto</th>
+          <th class="center">Status</th>
+          <th class="right">Vendas Jan (un)</th>
+          <th class="right">Faturamento</th>
+          <th class="right">Estoque Atual</th>
+          <th class="right">Média Mensal</th>
+          <th class="right">Projeção 60d</th>
+          <th class="center">Cobertura</th>
+          <th class="right">Sugestão de Compra</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 1 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">1</td>
+          <td>
+            <div class="product-name">P1</div>
+            <div class="product-code">C1</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA IMINENTE</span></td>
+          <td class="right">650</td>
+          <td class="right">R$ 52.000</td>
+          <td class="right" style="color:var(--danger);font-weight:600">37</td>
+          <td class="right">629</td>
+          <td class="right">1.258</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:3%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">~2 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">1.221</td>
+        </tr>
+        <!-- 2 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">2</td>
+          <td>
+            <div class="product-name">P2</div>
+            <div class="product-code">C2</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">491</td>
+          <td class="right">R$ 34.370</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">475</td>
+          <td class="right">950</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">950</td>
+        </tr>
+        <!-- 3 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">3</td>
+          <td>
+            <div class="product-name">P3</div>
+            <div class="product-code">C3</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">175</td>
+          <td class="right">R$ 26.250</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">169</td>
+          <td class="right">339</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">339</td>
+        </tr>
+        <!-- 4 -->
+        <tr class="row-warning">
+          <td style="font-family:var(--mono);color:var(--text-muted)">4</td>
+          <td>
+            <div class="product-name">P4</div>
+            <div class="product-code">C4</div>
+          </td>
+          <td class="center"><span class="status atencao"><span class="pulse"></span>ATENÇÃO</span></td>
+          <td class="right">372</td>
+          <td class="right">R$ 22.320</td>
+          <td class="right" style="color:var(--warning);font-weight:600">601</td>
+          <td class="right">360</td>
+          <td class="right">720</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill warning" style="width:83%"></div></div>
+              <span class="coverage-label" style="color:var(--warning)">~50 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--warning);font-weight:600">119</td>
+        </tr>
+        <!-- 5 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">5</td>
+          <td>
+            <div class="product-name">P5</div>
+            <div class="product-code">C5</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">216</td>
+          <td class="right">R$ 21.600</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">209</td>
+          <td class="right">418</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">418</td>
+        </tr>
+        <!-- 6 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">6</td>
+          <td>
+            <div class="product-name">P6</div>
+            <div class="product-code">C6</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">377</td>
+          <td class="right">R$ 19.345</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">365</td>
+          <td class="right">730</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">730</td>
+        </tr>
+        <!-- 7 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">7</td>
+          <td>
+            <div class="product-name">P7</div>
+            <div class="product-code">C7</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">125</td>
+          <td class="right">R$ 17.500</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">121</td>
+          <td class="right">242</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">242</td>
+        </tr>
+        <!-- 8 -->
+        <tr>
+          <td style="font-family:var(--mono);color:var(--text-muted)">8</td>
+          <td>
+            <div class="product-name">P8</div>
+            <div class="product-code">C8</div>
+          </td>
+          <td class="center"><span class="status ok-badge"><span class="pulse"></span>OK</span></td>
+          <td class="right">300</td>
+          <td class="right">R$ 12.000</td>
+          <td class="right" style="color:var(--ok);font-weight:600">601</td>
+          <td class="right">290</td>
+          <td class="right">581</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill ok" style="width:100%"></div></div>
+              <span class="coverage-label" style="color:var(--ok)">~62 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--ok);font-weight:600">0</td>
+        </tr>
+        <!-- 9 -->
+        <tr class="row-warning">
+          <td style="font-family:var(--mono);color:var(--text-muted)">9</td>
+          <td>
+            <div class="product-name">P9</div>
+            <div class="product-code">C9</div>
+          </td>
+          <td class="center"><span class="status atencao"><span class="pulse"></span>ATENÇÃO</span></td>
+          <td class="right">491</td>
+          <td class="right">R$ 9.820</td>
+          <td class="right" style="color:var(--warning);font-weight:600">937</td>
+          <td class="right">475</td>
+          <td class="right">950</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill warning" style="width:98%"></div></div>
+              <span class="coverage-label" style="color:var(--warning)">~59 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--warning);font-weight:600">13</td>
+        </tr>
+        <!-- 10 -->
+        <tr class="row-danger">
+          <td style="font-family:var(--mono);color:var(--text-muted)">10</td>
+          <td>
+            <div class="product-name">P10</div>
+            <div class="product-code">C10</div>
+          </td>
+          <td class="center"><span class="status ruptura"><span class="pulse"></span>RUPTURA</span></td>
+          <td class="right">88</td>
+          <td class="right">R$ 8.800</td>
+          <td class="right" style="color:var(--danger);font-weight:600">0</td>
+          <td class="right">85</td>
+          <td class="right">170</td>
+          <td class="center">
+            <div class="coverage-bar-wrap">
+              <div class="coverage-bar"><div class="coverage-bar-fill danger" style="width:0%"></div></div>
+              <span class="coverage-label" style="color:var(--danger)">0 dias</span>
+            </div>
+          </td>
+          <td class="right" style="color:var(--danger);font-weight:700;font-size:14px">170</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== METHODOLOGY ===== -->
+  <div class="methodology">
+    <h3>📐 Metodologia de Cálculo</h3>
+    <p><strong>Base de dados:</strong> 5.214 pedidos com situação Em andamento, Atendido, Em digitação e Verificado no período de 01/01/2026 a 31/01/2026 (31 dias).</p>
+    <p><strong>Média mensal:</strong> <code>Vendas Jan ÷ 31 × 30</code> — normalização para mês comercial de 30 dias.</p>
+    <p><strong>Projeção 60 dias:</strong> <code>Vendas Jan ÷ 31 × 60</code> — consumo estimado para os próximos 2 meses mantendo o ritmo de janeiro.</p>
+    <p><strong>Sugestão de compra:</strong> <code>Projeção 60d − Estoque Atual</code> — quantidade mínima a adquirir para cobrir a demanda projetada. Valores negativos exibidos como 0.</p>
+    <p><strong>Cobertura:</strong> <code>Estoque Atual ÷ (Vendas Jan ÷ 31)</code> — dias de estoque restante no ritmo atual de vendas.</p>
+    <p style="margin-top:12px;color:var(--text);font-weight:500">⚠️ Nota: Janeiro é período de volta às aulas, com demanda atipicamente alta para cadernos. Recomenda-se avaliar a sazonalidade antes de projetar linearmente para meses seguintes.</p>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <span>Gerado automaticamente via integração Bling MCP</span>
+  <span>Dados de estoque consultados em tempo real em 20/03/2026</span>
+</div>
+
+</body>
+</html>
